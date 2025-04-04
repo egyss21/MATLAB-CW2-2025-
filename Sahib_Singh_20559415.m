@@ -3,8 +3,19 @@
 
 
 %% PRELIMINARY TASK - ARDUINO AND GIT INSTALLATION [10 MARKS]
-
-% Insert answers here
+clear
+%part c
+a = arduino('COM8', 'UNO'); 
+% Repeats the loop 10 times
+for i = 1:10 
+    %LED ON
+    writeDigitalPin(a, 'D12', 1); 
+    % Pause for 0.5 seconds
+    pause(0.5); 
+    %LED OFF
+    writeDigitalPin(a, 'D12', 0); 
+    pause(0.5);
+end
 
 %% TASK 1 - READ TEMPERATURE DATA, PLOT, AND WRITE TO A LOG FILE [20 MARKS]
 
