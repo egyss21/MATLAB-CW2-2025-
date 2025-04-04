@@ -110,10 +110,8 @@ pause(1);
 writeDigitalPin(a, 'D7', 0); 
 %% TASK 2 - LED TEMPERATURE MONITORING DEVICE IMPLEMENTATION [25 MARKS]
 clear
-%part b
 a = arduino('COM8', 'UNO');
-monitorTemperatureAndControlLEDs(a);
-function monitorTemperatureAndControlLEDs(a)
+function temp_monitor(a)
     % Check if input is a valid Arduino object
     if ~isa(a, 'arduino')
         error('Input must be a valid Arduino object.');
@@ -174,7 +172,7 @@ function monitorTemperatureAndControlLEDs(a)
                 blinkLED(a, redLED, 0.25);
             end
             
-            % Delay between readings to give time for the sensor to calibrate, had to do this since code did not run without it
+            % Delay between readings to give time for the sensor to settle
             pause(1);  
         end
     catch ME
