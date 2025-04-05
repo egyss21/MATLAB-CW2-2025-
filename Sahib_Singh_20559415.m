@@ -123,100 +123,23 @@ a = arduino('COM8', 'Uno');
 temp_monitor(a);
 %% TASK 3 - ALGORITHMS – TEMPERATURE PREDICTION [25 MARKS]
 clear
-a = arduino('COM8' , 'Uno');
-function temp_prediction(a)
-% Hardware Configuration
-% Temperature coefficient (V/°C)
-TC = 0.010;  
-% Voltage offset (V)
-V0 = 0.5;    
-tempPin = 'A1';
-greenLED = 'D3';
-yellowLED = 'D5';
-redLED = 'D7';
-
-% Initialize Hardware
-configurePin(a, tempPin, 'AnalogInput');
-configurePin(a, greenLED, 'DigitalOutput');
-configurePin(a, yellowLED, 'DigitalOutput');
-configurePin(a, redLED, 'DigitalOutput');
-
-% System Variables
-prevTemp = NaN;
-prevTime = tic;
-% Smoothing factor
-alpha = 0.3;               
-rateThreshold = 4/60;       
-blinkState = false;
-lastBlinkUpdate = tic;
-lastPrintUpdate = tic;
-
 try
-    while true
-        currentTime = toc(lastBlinkUpdate);
-        
-        % Temperature Measurement
-        rawTemp = (readVoltage(a,tempPin)-V0)/TC;
-        
-        
-        if isnan(prevTemp)
-            currentTemp = rawTemp;
-        else
-            currentTemp = alpha*rawTemp + (1-alpha)*prevTemp;
-        end
-        
-        % Calculation
-        elapsed = toc(prevTime);
-        if isnan(prevTemp)
-            rate = 0;
-        else
-            rate = (currentTemp-prevTemp)/elapsed;
-        end
-        prevTemp = currentTemp;
-        prevTime = tic;
-        
-        % Heating too fast
-        if rate > rateThreshold          
-            blinkInterval = 0.25;
-            if currentTime >= blinkInterval
-                blinkState = ~blinkState;
-                writeDigitalPin(a, redLED, blinkState);
-                writeDigitalPin(a, yellowLED, 0);
-                writeDigitalPin(a, greenLED, 0);
-                lastBlinkUpdate = tic;
-            end
-            
-        % Cooling too fast
-        elseif rate < -rateThreshold     
-            blinkInterval = 0.5;
-            if currentTime >= blinkInterval
-                blinkState = ~blinkState;
-                writeDigitalPin(a, yellowLED, blinkState);
-                writeDigitalPin(a, redLED, 0);
-                writeDigitalPin(a, greenLED, 0);
-                lastBlinkUpdate = tic;
-            end
-        
-        % Good condition
-        else                            
-            writeDigitalPin(a, redLED, 0);
-            writeDigitalPin(a, yellowLED, 0);
-            writeDigitalPin(a, greenLED, (currentTemp >= 18 && currentTemp <= 24));
-        end
-        
-       % Update every 1s
-        if toc(lastPrintUpdate) >= 1     
-            % 300 sec / 5 min projection
-            predictedTemp = currentTemp + rate*300; 
-            fprintf('Current: %.1f°C | Rate: %.3f°C/s | 5min: %.1f°C\n',...
-                    currentTemp, rate, predictedTemp);
-            lastPrintUpdate = tic;
-        end
-        
-        pause(1); % Small delay for responsiveness
-    end
-
+    % Replace 'COM8' with the correct port for your Arduino and 'Uno' with your board type
+    a = arduino('COM8', 'Uno'); 
+    disp('Arduino successfully initialized.');
+catch ME
+    % If Arduino initialization fails, display the error and exit
+    error('Failed to initialize Arduino. Error: %s', ME.message);
 end
+
+% Call the temperature prediction function
+try
+    disp('Starting temperature prediction...');
+    temp_prediction(a); % Pass the Arduino object to the function
+catch ME
+    % Catch any errors from the temp_prediction function and clean up
+    disp('Error occurred during temperature prediction:');
+    disp(ME.message);
 end
 %% TASK 4 - REFLECTIVE STATEMENT [5 MARKS]
 
