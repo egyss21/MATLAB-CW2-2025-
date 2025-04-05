@@ -203,7 +203,6 @@ end
 %% TASK 3 - ALGORITHMS – TEMPERATURE PREDICTION [25 MARKS]
 clear
 a = arduino('COM8' , 'Uno');
-temp_prediction(a);
 function temp_prediction(a)
 % Hardware Configuration
 % Temperature coefficient (V/°C)
@@ -303,8 +302,31 @@ end
 %% TASK 4 - REFLECTIVE STATEMENT [5 MARKS]
 
 % Insert reflective statement here (400 words max)
-
-
+% The main challenge I faced during this project was understanding the need
+% to create separate files for functions. Initially, it seemed much more 
+% efficient to condense the logic into a few lines within the main script. 
+% However, as I progressed, I realized that modularity plays a crucial role
+% in ensuring the stability, clarity of the code. This approach becomes 
+% especially important in collaborative projects, as it 
+% allows individual functions to be tested, debugged, and updated without 
+% affecting the entire program.
+% One of the code’s greatest strengths was its organized structure, which 
+% made it straightforward to follow and debug. Additionally, the program 
+% provided helpful feedback when the output was not as expected, such as 
+% warning the user about incorrect connections or potential issues with 
+% voltage. These features improved the overall user experience and made 
+% troubleshooting easier. However, there were limitations as well, 
+% particularly when it came to error handling. While the code addressed
+% invalid voltage readings, it could benefit from more robust handling of 
+% scenarios like sensor failures or unexpected values.
+% To improve the code, I would focus on implementing dynamic configurations
+% . This would allow users to customize parameters such as pin assignments,
+% temperature thresholds, and monitoring intervals, making the program more
+% adaptable to different hardware setups and use cases. Consolidating 
+% repetitive code, like the blinking logic for LEDs, would also enhance 
+% efficiency. Additionally, introducing features 
+% like sensor calibration could improve the accuracy of temperature 
+% readings, especially in environments where conditions may vary.
 %% TASK 5 - COMMENTING, VERSION CONTROL AND PROFESSIONAL PRACTICE [15 MARKS]
 
 % No need to enter any answershere, but remember to:
