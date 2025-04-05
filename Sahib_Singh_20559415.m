@@ -118,88 +118,9 @@ pause(1);
 writeDigitalPin(a, 'D3', 0);
 %% TASK 2 - LED TEMPERATURE MONITORING DEVICE IMPLEMENTATION [25 MARKS]
 clear
-a = arduino('COM8', 'UNO');
-function temp_monitor(a)
-    % Check if input is a valid Arduino object
-    if ~isa(a, 'arduino')
-        error('Input must be a valid Arduino object.');
-    end
-
-    TC = 0.010;  
-    V0 = 0.5;
-    
-    % Pin configuration
-    greenLED = 'D3';
-    yellowLED = 'D5';
-    redLED = 'D7';
-    tempPin = 'A1'; 
-    
-    % Configure pins
-    configurePin(a, greenLED, 'DigitalOutput');
-    configurePin(a, yellowLED, 'DigitalOutput');
-    configurePin(a, redLED, 'DigitalOutput');
-    configurePin(a, tempPin, 'AnalogInput');
-    
-    
-    disp('=== Temperature Monitoring Started ===');
-    disp('Press Ctrl+C to stop.');
-    disp('-------------------------------------');
-
-    try
-        while true
-            % Read raw voltage 
-            rawVoltage = readVoltage(a, tempPin);
-            
-            % Check for invalid voltage 
-            if rawVoltage > 4.5
-                warning('Voltage > 4.5V! Check wiring.');
-            elseif rawVoltage < 0.1
-                warning('Voltage < 0.1V! Check GND connection.');
-            end
-            
-            % Calculate temperature
-            temperature = (rawVoltage - V0) / TC;
-           
-            fprintf('Voltage: %.3f V | Temp: %.1f °C\n', rawVoltage, temperature);
-            
-            % Control LEDs based on temperature
-            if temperature >= 18 && temperature <= 24
-                % Normal range: Green LED on
-                writeDigitalPin(a, greenLED, 1);
-                writeDigitalPin(a, yellowLED, 0);
-                writeDigitalPin(a, redLED, 0);
-            elseif temperature < 18
-                % Too cold: Blink yellow LED
-                writeDigitalPin(a, greenLED, 0);
-                blinkLED(a, yellowLED, 0.5);
-                writeDigitalPin(a, redLED, 0);
-            else
-                % Too hot: Blink red LED 
-                writeDigitalPin(a, greenLED, 0);
-                writeDigitalPin(a, yellowLED, 0);
-                blinkLED(a, redLED, 0.25);
-            end
-            
-            % Delay between readings to give time for the sensor to settle
-            pause(1);  
-        end
-    catch ME
-        % Cleanup on error
-        writeDigitalPin(a, greenLED, 0);
-        writeDigitalPin(a, yellowLED, 0);
-        writeDigitalPin(a, redLED, 0);
-        disp('Monitoring stopped due to:');
-        disp(ME.message);
-    end
-end
-
-% Helper function for blinking LEDs
-function blinkLED(a, pin, interval)
-    writeDigitalPin(a, pin, 1);
-    pause(interval);
-    writeDigitalPin(a, pin, 0);
-    pause(interval);
-end
+a = arduino('COM8', 'Uno');
+%calls the function
+temp_monitor(a);
 %% TASK 3 - ALGORITHMS – TEMPERATURE PREDICTION [25 MARKS]
 clear
 a = arduino('COM8' , 'Uno');
@@ -297,8 +218,6 @@ try
 
 end
 end
-
-
 %% TASK 4 - REFLECTIVE STATEMENT [5 MARKS]
 
 % Insert reflective statement here (400 words max)
